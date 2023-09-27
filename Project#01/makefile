@@ -14,4 +14,4 @@ molecule.o: molecule.cpp
 	$(G++) $^ -o $@
 
 clean:
-	rm -rf 001.exe *.o
+	rm -rf *.exe *.o
