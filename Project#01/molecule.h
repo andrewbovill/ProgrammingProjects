@@ -13,6 +13,7 @@ class Molecule
     double **geom;
     string point_group;
  
+	void print_geom();
     void rotate(double phi);
     void translate(double x, double y, double z);
     double bond(int atom1, int atom2);
