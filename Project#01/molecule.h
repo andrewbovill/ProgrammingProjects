@@ -20,8 +20,8 @@ class Molecule
     double angle(int atom1, int atom2, int atom3);
     double torsion(int atom1, int atom2, int atom3, int atom4);
 
-// Calling constructor and deconstructor functions defined in 'molecule.cpp'
-     //Molecule();
-    //~Molecule();
+// Declaring constructor and deconstructor functions
+    Molecule(const char *filename,int q);
+    ~Molecule();
 };
 
