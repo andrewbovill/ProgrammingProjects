@@ -11,9 +11,11 @@ class Molecule
     int charge;
     int *zvals;
     double **geom;
+    double **Rij;
     string point_group;
  
 	void print_geom();
+	void print_bond();
     void rotate(double phi);
     void translate(double x, double y, double z);
     double bond(int atom1, int atom2);
