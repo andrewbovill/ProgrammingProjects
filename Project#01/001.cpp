@@ -20,10 +20,15 @@ int main(int argc, char* argv[]) {
     cout << "Interatomic distances (bohr):\n";
 	mol.print_bond_distances();
 
-    cout << "Interatomic distances (bohr):\n";
+    cout << "Bond angles:\n";
+
+    cout << "Andrew test dot:\n";
+    cout << mol.dot(2,1,0)<<"\n";
+    cout << mol.angle(2,1,0)<<"\n";
+    cout << mol.angle(3,1,0)<<"\n";
+
 	mol.print_bond_angles();
 
-    cout << "Andrew test: " << mol.Rij[1][0]<<"\n";
     return 0;
 
 }

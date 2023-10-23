@@ -14,7 +14,6 @@ void Molecule::print_geom(){
 
 void Molecule::print_bond_distances(){
 
-	printf("Andrew Test\n");
 	for(int i = 0; i < natom; i++){
 		for (int j = 0; j<i; j++){
 			Rij[i][j] = pow(pow((geom[i][0]-geom[j][0]),2.0) +
@@ -22,41 +21,49 @@ void Molecule::print_bond_distances(){
 				+pow((geom[i][2]-geom[j][2]),2.0),0.5);
 			printf("%d %d %8.5f\n", i, j, Rij[i][j]);
 		}
-		int j = 0;
 	}
+}
+double Molecule::bond(int a,int b)
+{
+    return Rij[a][b];
+}
+
+double Molecule::dot(int a,int b,int c)
+{
+    //gives the dot product between two vectors ba and bc 
+    //vector 1 = ba
+    //vector 2 = bc
+
+    double dot = 0.0;
+	dot += (geom[a][0] - geom[b][0]) * (geom[c][0] - geom[b][0]); 
+	dot += (geom[a][1] - geom[b][1]) * (geom[c][1] - geom[b][1]); 
+	dot += (geom[a][2] - geom[b][2]) * (geom[c][2] - geom[b][2]); 
+
+    return dot;
+}
+
+double Molecule::angle(int a,int b,int c)
+{
+    double angle = 0.0;
+    angle = acos(dot(a,b,c)/(bond(a,b)*bond(b,c)));
+    angle *= 180.0/acos(-1.0);
+    return angle;
 }
 
 void Molecule::print_bond_angles(){
 
-    ex[1][0] = (geom[1][0]-geom[0][0])/(Rij[1][0]);
-    ey[1][0] = (geom[1][1]-geom[0][1])/(Rij[1][0]);
-    ez[1][0] = (geom[1][2]-geom[0][2])/(Rij[1][0]);
-
-    ex[2][0] = (geom[2][0]-geom[0][0])/(Rij[2][0]);
-    ey[2][0] = (geom[2][1]-geom[0][1])/(Rij[2][0]);
-    ez[2][0] = (geom[2][2]-geom[0][2])/(Rij[2][0]);
-    
-    double dot_product = ex[1][0]*ex[2][0] + ey[1][0]*ey[2][0] + ez[1][0]*ez[2][0];
-    double angle = acos(dot_product);
-
-    cout << ez[1][0]<<"\n";
-    cout << dot_product<<"\n";
-    cout << angle<<"\n";
-
-	/*printf("Andrew Test\n");
+	printf("Andrew Test inside bond angle\n");
     for(int i = 0; i < natom; i++){
         for (int j = 0; j<i; j++){
-            for (int k = 0; k<j; j++){
+            for (int k = 0; k<j; k++){
                 if (i!=j && i!=k && j!=k){
-                    ex[j][k] = (geom[j][0]-geom[k][0])/(Rij[j][k]);
-                    ey[j][k] = (geom[j][1]-geom[k][1])/(Rij[j][k]);
-                    ez[j][k] = (geom[j][2]-geom[k][2])/(Rij[j][k]);
+			        printf("%2d-%2d-%2d %10.6f\n", i,j,k, angle(i,j,k));
                 }
-
-		}
-		int j = 0;
-	}*/
+             }
+		 }
+	 }
 }
+
 
 Molecule::Molecule(const char *filename,int q){
 
@@ -80,23 +87,9 @@ Molecule::Molecule(const char *filename,int q){
     	inputfile>>zvals[i]>>geom[i][0]>>geom[i][1]>>geom[i][2];
     } 
 
-	Rij = new double*[natom-1];
+	Rij = new double*[natom];
     for (int i = 0; i < natom; i++) { // Iterate up to natom
-    	Rij[i] = new double[natom-1];
-	} 
-
-	ex = new double*[natom-1];
-    for (int i = 0; i < natom; i++) { // Iterate up to natom
-    	ex[i] = new double[natom-1];
-	} 
-    
-	ey = new double*[natom-1];
-    for (int i = 0; i < natom; i++) { // Iterate up to natom
-    	ey[i] = new double[natom-1];
-	} 
-	ez = new double*[natom-1];
-    for (int i = 0; i < natom; i++) { // Iterate up to natom
-    	ez[i] = new double[natom-1];
+    	Rij[i] = new double[natom];
 	} 
 
 }
@@ -111,10 +104,6 @@ Molecule::~Molecule(){
     delete[] Rij[i];
   }
   delete[] Rij;
-
-  for(int i=0; i < natom; i++){
-    delete[] ex[i]; delete[] ey[i]; delete[] ez[i];
-  }
-  delete[] ex; delete[] ey; delete[] ez; 
+  
 }
 
