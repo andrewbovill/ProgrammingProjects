@@ -4,8 +4,7 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
-
-using namespace std;
+#include <vector>
 
 int main(int argc, char* argv[]) {
 	
@@ -14,20 +13,24 @@ int main(int argc, char* argv[]) {
     //Create molecule object of class type "Molecule"
     Molecule mol(argv[1],0);
 
+    //Step 1 Print
     cout << "Input Cartesian coordinates:\n";
     mol.print_geom();
     
+    //Step 2 Print
     cout << "Interatomic distances (bohr):\n";
 	mol.print_bond_distances();
 
+    //Step 3 Print
     cout << "Bond angles:\n";
-
-    cout << "Andrew test dot:\n";
-    cout << mol.dot(2,1,0)<<"\n";
-    cout << mol.angle(2,1,0)<<"\n";
-    cout << mol.angle(3,1,0)<<"\n";
-
 	mol.print_bond_angles();
+
+    //Step 4 Print
+    //oop follows crawford notation for "out of plane angles"
+    cout << "Out-of-plane angles:\n";
+	mol.print_oop_angles();
+    //Andrew testing individual values
+    //
 
     return 0;
 
