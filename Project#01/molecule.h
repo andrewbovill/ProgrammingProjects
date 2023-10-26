@@ -16,9 +16,9 @@ class Molecule{
 
 //  Printing functions
     void print_geom();
-	void print_bond_distances();
-	void print_bond_angles();
-	void print_oop_angles();
+	  void print_bond_distances();
+	  void print_bond_angles();
+	  void print_oop_angles();
 
     double bond(int atom1,int atom2);
     double dot(const vector<double>& vector1, const vector<double>& vector2);
