@@ -32,9 +32,17 @@ void Molecule::print_bond_distances()
 }
 double Molecule::bond(int a,int b)
 {
-    return Rij[a][b];
+    //Rij[a][b] transpose values don't exist, just do transpose on the fly
+    if (Rij[a][b] == 0.0)
+    {
+      double bond_distance = Rij[b][a];
+      return bond_distance;
+    }
+    else
+    {
+      return Rij[a][b];
+    }
 }
-
 
 double Molecule::dot(const vector<double>& vector1, const vector<double>& vector2)
 {
@@ -58,10 +66,8 @@ double Molecule::dot(const vector<double>& vector1, const vector<double>& vector
   return dot;
 }
 
-
 vector<double> Molecule::cross(const vector<double>& vector1, const vector<double>& vector2)
 {
-    
   if (vector1.size() != 3 || vector2.size() != 3)
     {
         // You can add proper error handling here.
@@ -76,6 +82,11 @@ vector<double> Molecule::cross(const vector<double>& vector1, const vector<doubl
   cross[2] = vector1[0] * vector2[1] - vector1[1] * vector2[0];
 
   return cross;
+}
+
+double Molecule::unit(int cart, int a, int b)
+{
+  return -(geom[a][cart]-geom[b][cart])/bond(a,b);
 }
 
 double Molecule::angle(int a,int b,int c)
@@ -101,7 +112,6 @@ double Molecule::angle(int a,int b,int c)
 }
 
 void Molecule::print_bond_angles(){
-
   for(int i = 0; i < natom; i++){
     for (int j = 0; j<i; j++){
       for (int k = 0; k<j; k++){
@@ -115,43 +125,49 @@ void Molecule::print_bond_angles(){
 }
 
 void Molecule::print_oop_angles(){
-
-  for(int i = 0; i < natom; i++){
-    for (int j = 0; j<natom; j++){
-      for (int k = 0; k<natom; k++){
-        for (int l = 0; l<k; l++){
+  for(int i=0; i < natom; i++) {
+    for(int k=0; k < natom; k++) {
+      for(int j=0; j < natom; j++) {
+        for(int l=0; l < j; l++) {
+          if(i!=j && i!=k && i!=l && j!=k && k!=l && bond(i,k) < 4.0 && bond(k,j) < 4.0 && bond(k,l) < 4.0){
           //generate tmpvec as left vector
+          //bond(k,j) is to normalize
           vector<double> vectorkj(3);
-	        vectorkj[0] = (geom[k][0] - geom[j][0]); 
-	        vectorkj[1] = (geom[k][1] - geom[j][1]); 
-	        vectorkj[2] = (geom[k][2] - geom[j][2]); 
+	        vectorkj[0] = (geom[j][0] - geom[k][0])/bond(k,j); 
+	        vectorkj[1] = (geom[j][1] - geom[k][1])/bond(k,j); 
+	        vectorkj[2] = (geom[j][2] - geom[k][2])/bond(k,j); 
 
           vector<double> vectorkl(3);
-	        vectorkl[0] = (geom[k][0] - geom[l][0]); 
-	        vectorkl[1] = (geom[k][1] - geom[l][1]); 
-	        vectorkl[2] = (geom[k][2] - geom[l][2]); 
+	        vectorkl[0] = (geom[l][0] - geom[k][0])/bond(k,l); 
+	        vectorkl[1] = (geom[l][1] - geom[k][1])/bond(k,l); 
+	        vectorkl[2] = (geom[l][2] - geom[k][2])/bond(k,l); 
 
           vector<double> tmpvec(3);
           tmpvec = cross(vectorkj,vectorkl);
-          cout<<"cross product: "<<tmpvec[0]<<" "<<tmpvec[1]<<" "<<tmpvec[2]<<endl;
-          cout<<endl;
+          //cout<<"cross product: "<<tmpvec[0]<<" "<<tmpvec[1]<<" "<<tmpvec[2]<<endl;
+          //cout<<endl;
 
            //generate ki as right vector
           vector<double> vectorki(3);
-	        vectorki[0] = (geom[k][0] - geom[i][0]); 
-	        vectorki[1] = (geom[k][1] - geom[i][1]); 
-	        vectorki[2] = (geom[k][2] - geom[i][2]); 
+	        vectorki[0] = (geom[i][0] - geom[k][0])/bond(k,i); 
+	        vectorki[1] = (geom[i][1] - geom[k][1])/bond(k,i); 
+	        vectorki[2] = (geom[i][2] - geom[k][2])/bond(k,i); 
 
-          //double oop
-          double oop = dot(tmpvec,vectorki);
+          //Down below... there's a bunch of conversions from radians to degrees
+          //Some day I'll make a function for it...whatever
+          double oop = dot(tmpvec,vectorki)/sin(angle(j,k,l)*acos(-1.0)/180.0);
           //oop /= sin(angle(j,k,l));
 
-//          if(i!=j && i!=k && i!=l && j!=k && k!=l && bond(i,k) < 4.0 && bond(k,j) < 4.0 && bond(k,l) < 4.0){
+          if(oop < -1.0) oop = asin(-1.0);
+          else if(oop > 1.0) oop = asin(1.0);
+          else oop = asin(oop);
+
+          oop = oop*180.0/acos(-1.0);
   			  printf("%2d-%2d-%2d-%2d %10.6f\n", i,j,k,l, oop);
-          
+          }
         }
-      }
-	  }
+	    }
+    }
   }
 }
 
@@ -181,7 +197,6 @@ Molecule::Molecule(const char *filename,int q){
     for (int i = 0; i < natom; i++) { // Iterate up to natom
     	Rij[i] = new double[natom];
 	  } 
-
 }
 
 Molecule::~Molecule(){
