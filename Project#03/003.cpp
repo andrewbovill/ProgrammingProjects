@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
   std::cout << "Location of files within: " << argv[2] << "\n";
   std::cout << "Argument count: " << argc << "\n";
 //Create molecule object of class type "Molecule"
-  HF mol(argv[1]);
+  HF mol(argv[2]);
 
 //Step 1 Print
 

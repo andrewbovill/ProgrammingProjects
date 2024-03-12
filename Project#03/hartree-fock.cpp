@@ -9,7 +9,8 @@
 
 void HF::read_symm_mat()
 {
-  printf("calling read_symm_mat()");
+  //std:cout<<"The second argument is: "<<argv[2]<<"\n";
+  std::cout<<"calling read_symm_mat()"<<"\n";
 }
 
 void HF::print_matrix()
@@ -19,15 +20,22 @@ void HF::print_matrix()
 
 HF::HF(const char *filename){
 
-	//Open filename
-	std::ifstream inputfile(filename);
+	//Open filenam
+  
+  std::string sdat_path = std::string(filename) + "s.dat";
+  std::cout<<"sdat_path is equal to: "<<sdat_path<<"\n";
+  std::cout<<"\n"<<"\n";
+	std::ifstream inputfile(sdat_path);
  	if (!inputfile.is_open()) {
         std::cerr << "Error: Could not open the file." << std::endl;
-    } 
-
+    } else { 
+  		read_symm_mat();
+			inputfile.close();
+		}
+	inputfile.close();
 }
 
 HF::~HF(){
   
 }
-
+inputfile.close();
