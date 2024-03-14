@@ -4,38 +4,45 @@
 #include <iomanip>
 #include <string>
 #include <cassert>
+#include <armadillo>
 #include <cmath>
 #include <vector>
 
-void HF::read_symm_mat()
-{
-  //std:cout<<"The second argument is: "<<argv[2]<<"\n";
-  std::cout<<"calling read_symm_mat()"<<"\n";
+void error_exit(){
+  std::cerr<<"ERROR! Hartree-Fock Program terminating.\n";
+  exit(0);
+}
+void print_mat(const arma::mat& mat){
+  size_t numRows = mat.n_rows;
+  size_t numCols = mat.n_cols;
+  for (size_t i = 0; i < numRows; ++i) {
+      std::cout << "|| "; 
+      for (size_t j = 0; j < numCols; ++j) {
+          // Print the element followed by a space
+          std::cout << mat(i, j) << " ";
+      }
+      std::cout << "||" << std::endl; 
+  }
 }
 
-void HF::print_matrix()
-{
-  printf("calling print_matrix()");
+arma::mat openfile(const char *filename,char mat){
+  std::cout<<"Called open file procedure.\n";
+  if (mat == 's'){
+    std::cout<<"Reading S matrix.\n";
+  } else if (mat =='t') {
+    std::cout<<"Reading T matrix.\n";
+  } else if (mat =='v') {
+    std::cout<<"Reading Vne matrix.\n";
+  } else {
+    std::cout<<"Incorrect input for openfile argument.\n";
+  }
+  arma::mat A = arma::randu<arma::mat>(4,4);
+  return A;
 }
 
-HF::HF(const char *filename){
 
-	//Open filenam
-  
-  std::string sdat_path = std::string(filename) + "s.dat";
-  std::cout<<"sdat_path is equal to: "<<sdat_path<<"\n";
-  std::cout<<"\n"<<"\n";
-	std::ifstream inputfile(sdat_path);
- 	if (!inputfile.is_open()) {
-        std::cerr << "Error: Could not open the file." << std::endl;
-    } else { 
-  		read_symm_mat();
-			inputfile.close();
-		}
-	inputfile.close();
-}
-
-HF::~HF(){
-  
-}
-inputfile.close();
+/*
+arma::mat readsymm_mat(const char *filename,char mat){
+  std::cout<<"Hello World!\n";
+  }
+*/

@@ -2,18 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <armadillo>
 
-class HF{
-  public:
-
-//  Printing functions
-
-    void print_matrix();
-    void read_symm_mat();
-
-// Declaring constructor and deconstructor functions
-    HF(const char *filename);
-    ~HF();
-};
-
-
+void error_exit();
+void print_mat(const arma::mat& mat);
+arma::mat openfile(const char *filename,char mat);
+//arma::mat readsymm_mat(const char *filename,char mat);
