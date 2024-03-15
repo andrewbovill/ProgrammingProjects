@@ -1,4 +1,4 @@
-#include "hartree-fock.h"
+#include "hf.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -24,14 +24,16 @@ int main(int argc, char* argv[]) {
   std::cout << "Location of files within: " << argv[1] << "\n\n";
 
 //Read Overlap Matrix
-  arma::mat S_Mat = openfile(argv[1],'s');
+  arma::mat S_Mat = openfile_mat(argv[1],'s');
   print_mat(S_Mat);
-  //arma::S_Mat = readsymm_mat(argv[1],'s');
 //Read Kinetic Matrix
-//  openfile(argv[1],'t');
+  arma::mat T_Mat = openfile_mat(argv[1],'t');
+  print_mat(T_Mat);
   //arma::T_Mat = readsymm_mat(argv[1],'t');
-//Read Kinetic Matrix
- // openfile(argv[1],'v');
+//Read Potential Nuclear-Electron Matrix
+  arma::mat Vne_Mat = openfile_mat(argv[1],'v');
+  print_mat(Vne_Mat);
+ // openfile_mat(argv[1],'v');
   //arma::V_Mat = readsymm_mat(argv[1],'v');
 
 
